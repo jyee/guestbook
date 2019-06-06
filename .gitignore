@@ -1,0 +1,11 @@
+.DS_Store
+*.swp
+
+# Using pyenv and virtualenv to test locally.
+app/.python-version
+app/venv
+
+# Copy the datadog-agent.yaml to my-datadog-agent.yaml,
+# then add your own api key from https://app.datadoghq.com/account/settings#api
+kubernetes/my-datadog-agent.yaml
+
