@@ -102,6 +102,10 @@ spec:
             value: "true"
           - name: DD_APM_ENABLED
             value: "true"
+          - name: DD_LOGS_ENABLED
+            value: "true"
+          - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
+            value: "true"
           - name: DD_KUBERNETES_KUBELET_HOST
             valueFrom:
               fieldRef:
@@ -112,6 +116,9 @@ spec:
             value: "true"
           - name: DD_DOGSTATSD_NON_LOCAL_TRAFFIC
             value: "true"
+          # If your Kubernetes is running the Containerd CRI, uncomment the lines below.
+          #- name: DD_CRI_SOCKET_PATH
+          #  value: "/var/run/containerd/containerd.sock"
         resources:
           requests:
             memory: "256Mi"
@@ -122,6 +129,10 @@ spec:
         volumeMounts:
           - name: dockersocket
             mountPath: /var/run/docker.sock
+          # If your Kubernetes is running the Containerd CRI, comment out the lines above.
+          # Then uncomment the lines below.
+          #- name: containerdsocket
+          #  mountPath: /var/run/containerd/containerd.sock
           - name: procdir
             mountPath: /host/proc
             readOnly: true
@@ -131,6 +142,8 @@ spec:
           - name: passwd
             mountPath: /etc/passwd
             readOnly: true
+          - name: pointerdir
+            mountPath: /opt/datadog-agent/run
         livenessProbe:
           exec:
             command:
@@ -141,6 +154,11 @@ spec:
         - hostPath:
             path: /var/run/docker.sock
           name: dockersocket
+        # If your Kubernetes is running the Containerd CRI, comment out the lines above.
+        # Then uncomment the lines below.
+        #- hostPath:
+        #    path: /var/run/containerd/containerd.sock
+        #  name: containerdsocket
         - hostPath:
             path: /proc
           name: procdir
@@ -150,6 +168,9 @@ spec:
         - hostPath:
             path: /etc/passwd
           name: passwd
+        - hostPath:
+            path: /opt/datadog-agent/run
+          name: pointerdir
 ---
 # Everything below is part of Kube State Metrics.
 # We include this because it provides additional metrics around Kubernetes
