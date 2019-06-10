@@ -23,6 +23,15 @@ cp datadog-agent.yaml my-datadog-agent.yaml
 # Start the Datadog Agent
 kubectl apply -f kubernetes/my-datadog-agent.yaml
 
+# Create namespace for gremlin
+kubectl create -f ./gremlin-namespace.yaml
+
+# IMPORTANT:Edit Gremlin config to add your Team ID and Secret from https://app.gremlin.com/settings/teams. Make sure edit the <team-id> and <team-secret> placeholders 
+vi kubernetes/gremlin-DaemonSet.yaml
+
+# Deploy Gremlin as a DaemonSet
+kubectl apply -f kubernetes/gremlin-DaemonSet.yaml 
+
 # Start the Guestbook
 kubectl apply -f kubernetes/guestbook-datadog.yaml
 ```
