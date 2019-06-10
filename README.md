@@ -108,5 +108,5 @@ The Datadog Agent runs as a [Kubernetes Daemonset](https://kubernetes.io/docs/co
 The `datadog-agent.yaml` file also includes an implementation of Kube State Metrics. This allows the Datadog agent to gather more information about the health and performance of the Kubernetes cluster.
 
 
-### Running Gremlin
-TODO: Add info about the Gremlin DS here.
+### Running the Gremlin Agent
+Gremlin must be installed on each host you wish to attack, and every installed gremlin must be registered with the Gremlin service. For this example, the gremlin agent will be installed as [Kubernetes Daemonset](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) under a new [namesapce](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/) called `gremlin`. 
