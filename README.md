@@ -1,4 +1,4 @@
-# Example Guestbook Applicaiton
+# Example Guestbook Application
 
 This repo contains an example guestbook to demonstrate how to instrument a basic application.
 
