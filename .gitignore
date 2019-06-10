@@ -6,6 +6,10 @@ app/.python-version
 app/venv
 
 # Copy the datadog-agent.yaml to my-datadog-agent.yaml,
-# then add your own api key from https://app.datadoghq.com/account/settings#api
-kubernetes/my-datadog-agent.yaml
+# then add your own API key from
+# https://app.datadoghq.com/account/settings#api
+# Copy the gremlin.yaml to my-gremlin.yaml,
+# then add your own Team ID and Secret Key from
+# https://app.gremlin.com/settings/teams
+kubernetes/my-*.yaml
 

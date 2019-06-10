@@ -9,9 +9,12 @@ This application is intended to be run on Kubernetes. Note that all YAML files a
 To run the application:
 
 ```
+# All YAML is in the kubernetes directory
+cd kubernetes
+
 # Start the Redis master and slave
-kubectl apply -f kubernetes/redis-master.yaml
-kubectl apply -f kubernetes/redis-slave.yaml
+kubectl apply -f redis-master.yaml
+kubectl apply -f redis-slave.yaml
 
 # Create a copy of the Datadog Agent YAML
 cp datadog-agent.yaml my-datadog-agent.yaml
@@ -20,21 +23,24 @@ cp datadog-agent.yaml my-datadog-agent.yaml
 # in the my-datadog-agent.yaml file with your own
 # API key from https://app.datadoghq.com/account/settings#api
 
-# Start the Datadog Agent
-kubectl apply -f kubernetes/my-datadog-agent.yaml
+# Deploy the Datadog Agent as a DaemonSet
+kubectl apply -f my-datadog-agent.yaml
 
-# Create namespace for gremlin
-kubectl create -f ./gremlin-namespace.yaml
+# Create a copy of the Datadog Agent YAML
+cp gremlin.yaml my-gremlin.yaml
 
-# IMPORTANT:Edit Gremlin config to add your Team ID and Secret from https://app.gremlin.com/settings/teams. Make sure edit the <team-id> and <team-secret> placeholders 
-vi kubernetes/gremlin-DaemonSet.yaml
+# IMPORTANT: replace the <YOUR TEAM ID> and <YOUR SECRET KEY>
+# placeholders in the my-gremlin.yaml file with your own
+# values from https://app.gremlin.com/settings/team
 
 # Deploy Gremlin as a DaemonSet
-kubectl apply -f kubernetes/gremlin-DaemonSet.yaml 
+kubectl apply -f my-gremlin.yaml
 
 # Start the Guestbook
-kubectl apply -f kubernetes/guestbook-datadog.yaml
+kubectl apply -f guestbook-datadog.yaml
 ```
+
+Note: Always keep your secret keys safe and never check them into Git! We recommend copying the Datadog and Gremlin YAML files prior to setting your secrets. YAML files prefixed with `my-` will be ignored by Git.
 
 ## What's going on?
 
@@ -50,7 +56,7 @@ The `app.py` file contains the un-instrumented version of the application. This 
 
 ### Adding instrumentation
 
-The `app-datadog.py` version of the application contains a few additions. To start, it imports portions of the `datadog` and `ddtrace` libraries, which provide DogStatsD and Datadog APM support respectively:
+The `app-datadog.py` version of the application contains a few additions. It imports portions of the `datadog` and `ddtrace` libraries, which provide DogStatsD and Datadog APM support respectively:
 
 ```
 # Datadog tracing and metrics
@@ -100,3 +106,7 @@ statsd.increment("guestbook.post")
 The Datadog Agent runs as a [Kubernetes Daemonset](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/). This guarantees that one Datadog Agent pod will be running on each node in the Kubernetes cluster. As we saw earlier, each instance of the guestbook application will receive this host node IP using the `DOGSTATSD_HOST_IP` environment variable.
 
 The `datadog-agent.yaml` file also includes an implementation of Kube State Metrics. This allows the Datadog agent to gather more information about the health and performance of the Kubernetes cluster.
+
+
+### Running Gremlin
+TODO: Add info about the Gremlin DS here.
